@@ -8,6 +8,16 @@ export const useCarStore = defineStore('car', () => {
     const currentCar = ref<Car | null>(null)
     const searchResults = ref<Car[]>([])
 
+    const fetchAllCars = async () => {
+        try {
+            const response = await apiClient.get('/car/all')
+            cars.value = response.data
+            return cars.value
+        } catch (error) {
+            return []
+        }
+    }
+
     const searchCars = async (number : string) => {
         try {
             const response = await apiClient.get('/car/search', {
@@ -43,7 +53,7 @@ export const useCarStore = defineStore('car', () => {
 
     const deleteCar = async (id: number) => {
         try {
-            await apiClient.delete('/car/${id}')
+            await apiClient.delete(`/car/${id}`)
         } catch (error) {
             console.error('Deleting car error: ', error)
         }
@@ -56,6 +66,7 @@ export const useCarStore = defineStore('car', () => {
         searchCars,
         createCar,
         updateCar,
-        deleteCar
+        deleteCar, 
+        fetchAllCars
     }
 })
